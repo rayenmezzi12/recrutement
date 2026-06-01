@@ -1,0 +1,21 @@
+<button type="button" class="chat-fab" (click)="toggle()" aria-label="Assistant IA">🤖</button>
+
+<div class="chat-panel glass-card" *ngIf="open">
+  <div class="chat-panel-header">
+    <strong>Assistant IA</strong>
+    <button type="button" class="close-btn" (click)="toggle()">×</button>
+  </div>
+  <div class="chat-panel-messages">
+    <div class="msg" *ngFor="let m of messages" [class.user]="m.sender === 'user'" [class.bot]="m.sender === 'bot'">
+      {{ m.text }}
+    </div>
+    <div *ngIf="loading" class="msg bot">Réflexion...</div>
+  </div>
+  <div class="quick-prompts">
+    <button type="button" class="quick-btn" *ngFor="let p of quickPrompts" (click)="usePrompt(p)">{{ p }}</button>
+  </div>
+  <div class="chat-panel-input">
+    <input [(ngModel)]="input" placeholder="Votre question..." (keyup.enter)="send()" />
+    <button type="button" class="btn-primary" (click)="send()" [disabled]="loading">Envoyer</button>
+  </div>
+</div>

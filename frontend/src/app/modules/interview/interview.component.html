@@ -1,0 +1,128 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Agenda des Entretiens</h2>
+    <div class="header-actions">
+      <button class="btn-primary" (click)="openScheduleForm()" [disabled]="!candidates.length">+ Planifier</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-text">Chargement des entretiens...</div>
+  <div *ngIf="error" class="error-text">{{ error }}</div>
+  <div *ngIf="!loading && !interviews.length" class="empty-state glass-card" style="text-align: center; padding: 3rem;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">📅</div>
+    <h3>Aucun entretien prévu</h3>
+    <p style="color: #a0aec0; margin-bottom: 1.5rem;">Vous n'avez aucun entretien planifié pour le moment.</p>
+    <button class="btn-primary" (click)="openScheduleForm()" [disabled]="!candidates.length">Planifier un entretien</button>
+  </div>
+
+  <div class="interviews-list" *ngIf="!loading && interviews.length">
+    <div class="glass-card interview-card" *ngFor="let interview of interviews">
+      <div class="date-block">
+        <span class="day">{{ interview.interviewDate | date:'dd' }}</span>
+        <span class="month">{{ interview.interviewDate | date:'MMM' }}</span>
+        <span class="time">{{ interview.interviewDate | date:'HH:mm' }}</span>
+      </div>
+
+      <div class="interview-details">
+        <h3>{{ interview.candidatName }}</h3>
+        <p class="role">{{ interview.role }}</p>
+        <span class="type-badge">{{ getTypeLabel(interview.type) }}</span>
+        <p class="interviewer" *ngIf="interview.location">Lieu : {{ interview.location }}</p>
+        <p class="interviewer" *ngIf="interview.interviewerName">Avec {{ interview.interviewerName }}</p>
+      </div>
+
+      <div class="interview-actions">
+        <span class="status-badge" [ngClass]="interview.status === 'SCHEDULED' ? 'active' : 'closed'">
+          {{ getStatusLabel(interview.status) }}
+        </span>
+        <button class="btn-primary meeting-btn" *ngIf="interview.status === 'SCHEDULED'" (click)="joinMeeting(interview)">
+          Rejoindre Visio
+        </button>
+        <button class="btn-secondary" *ngIf="interview.status === 'SCHEDULED'" (click)="completeInterview(interview)">
+          Marquer terminé
+        </button>
+        <button class="btn-secondary" *ngIf="interview.status === 'COMPLETED'" (click)="openEvaluation(interview)">
+          Évaluer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
+  <div class="glass-card modal-content" (click)="$event.stopPropagation()">
+    <h3>Planifier un entretien</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Candidat</label>
+        <select [(ngModel)]="form.candidateId" (ngModelChange)="onCandidateChange()">
+          <option *ngFor="let c of candidates" [ngValue]="c.id">{{ c.firstName }} {{ c.lastName }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Candidature (Poste)</label>
+        <select [(ngModel)]="form.applicationId">
+          <option *ngFor="let a of getApplicationsForCandidate(form.candidateId)" [ngValue]="a.id">
+            Candidature pour : {{ getJobTitleForApplication(a.id!) }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Intervieweur</label>
+        <input [(ngModel)]="form.interviewerName" />
+      </div>
+      <div class="form-group">
+        <label>Date et heure</label>
+        <input type="datetime-local" [(ngModel)]="form.interviewDate" />
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select [(ngModel)]="form.type">
+          <option value="ONLINE">Visioconférence</option>
+          <option value="IN_PERSON">Présentiel</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Lieu / lien visio</label>
+        <input [(ngModel)]="form.location" placeholder="Salle A ou URL Teams/Meet" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeForm()">Annuler</button>
+      <button class="btn-primary" (click)="scheduleInterview()">Planifier</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showEvaluationForm" (click)="closeEvaluation()">
+  <div class="glass-card modal-content" (click)="$event.stopPropagation()">
+    <h3>Évaluation — {{ selectedInterview?.candidatName }}</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Note technique (1-5)</label>
+        <input type="number" min="1" max="5" [(ngModel)]="evaluationForm.technicalRating" />
+      </div>
+      <div class="form-group">
+        <label>Note communication (1-5)</label>
+        <input type="number" min="1" max="5" [(ngModel)]="evaluationForm.communicationRating" />
+      </div>
+      <div class="form-group">
+        <label>Recommandation</label>
+        <select [(ngModel)]="evaluationForm.recommendation">
+          <option value="HIRE">Embaucher</option>
+          <option value="NO_HIRE">Ne pas embaucher</option>
+          <option value="HOLD">En attente</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Commentaires</label>
+        <textarea [(ngModel)]="evaluationForm.generalComments"></textarea>
+      </div>
+      <p class="score-preview">Note globale estimée : <strong>{{ computedGlobalScore() }}/5</strong> (moyenne pondérée technique 60 % + communication 40 %)</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeEvaluation()">Annuler</button>
+      <button class="btn-primary" (click)="submitEvaluation()">Enregistrer</button>
+    </div>
+  </div>
+</div>

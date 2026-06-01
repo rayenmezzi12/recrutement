@@ -1,0 +1,19 @@
+<div class="page-container" style="max-width: 800px;">
+  <div class="page-header">
+    <h2>Notifications</h2>
+    <button class="btn-primary" (click)="markAllRead()">Tout marquer comme lu</button>
+  </div>
+
+  <div *ngIf="loading" class="loading-text">Chargement...</div>
+
+  <div class="notifications-list" *ngIf="!loading">
+    <div class="glass-card notification-item" *ngFor="let notif of notifications" [class.unread]="!notif.isRead">
+      <div class="notif-content">
+        <h4>{{ notif.title }}</h4>
+        <p>{{ notif.body }}</p>
+        <span class="time">{{ notif.createdAt | date:'short' }}</span>
+      </div>
+    </div>
+    <p *ngIf="!notifications.length" class="empty-text">Aucune notification.</p>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+﻿version: '3.8'
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: pfa-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - default
+
+  grafana:
+    image: grafana/grafana
+    container_name: pfa-grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - default

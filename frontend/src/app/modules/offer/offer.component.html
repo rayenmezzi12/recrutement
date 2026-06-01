@@ -1,0 +1,96 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>{{ canManage ? 'Gestion des Offres' : 'Offres d\'emploi' }}</h2>
+    <div class="header-actions" *ngIf="canManage">
+      <button class="btn-primary" (click)="openCreateForm()">+ Nouvelle Offre</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-text">Chargement des offres...</div>
+  <div *ngIf="error" class="error-text">{{ error }}</div>
+
+  <div class="glass-card table-container" *ngIf="!loading">
+    <table class="premium-table" *ngIf="offers.length; else emptyOffers">
+      <thead>
+        <tr>
+          <th>Titre du poste</th>
+          <th>Département</th>
+          <th>Candidats</th>
+          <th>Date création</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let offer of offers">
+          <td class="fw-bold">{{ offer.title }}</td>
+          <td>{{ offer.department || '—' }}</td>
+          <td><span class="badge-count">{{ offer.applicants }}</span></td>
+          <td>{{ offer.createdDate | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="offer.status === 'OPEN' ? 'active' : 'closed'">
+              {{ getStatusLabel(offer.status) }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn-icon" (click)="viewJob(offer)" title="Voir">👁️</button>
+            <button class="btn-icon" *ngIf="canManage" (click)="openEditForm(offer)" title="Modifier">✏️</button>
+            <button class="btn-icon delete" *ngIf="canManage" (click)="deleteJob(offer.id)" title="Supprimer">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #emptyOffers>
+      <p class="empty-text">Aucune offre publiée.</p>
+    </ng-template>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
+  <div class="glass-card modal-content" (click)="$event.stopPropagation()">
+    <h3>{{ editingId ? 'Modifier l\'offre' : 'Nouvelle offre' }}</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Titre</label>
+        <input [(ngModel)]="form.title" />
+      </div>
+      <div class="form-group">
+        <label>Département</label>
+        <input [(ngModel)]="form.department" />
+      </div>
+      <div class="form-group">
+        <label>Lieu</label>
+        <input [(ngModel)]="form.location" />
+      </div>
+      <div class="form-group">
+        <label>Statut</label>
+        <select [(ngModel)]="form.status">
+          <option value="OPEN">Active</option>
+          <option value="CLOSED">Clôturée</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea [(ngModel)]="form.description"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeForm()">Annuler</button>
+      <button class="btn-primary" (click)="saveJob()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="selectedJob" (click)="closeView()">
+  <div class="glass-card modal-content" (click)="$event.stopPropagation()">
+    <h3>{{ selectedJob.title }}</h3>
+    <p><strong>Département :</strong> {{ selectedJob.department || '—' }}</p>
+    <p><strong>Lieu :</strong> {{ selectedJob.location || '—' }}</p>
+    <p><strong>Statut :</strong> {{ getStatusLabel(selectedJob.status) }}</p>
+    <p><strong>Candidatures :</strong> {{ selectedJob.applicants }}</p>
+    <p><strong>Description :</strong> {{ selectedJob.description || '—' }}</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeView()">Fermer</button>
+    </div>
+  </div>
+</div>

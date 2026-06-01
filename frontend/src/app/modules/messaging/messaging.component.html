@@ -1,0 +1,45 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Messagerie Interne</h2>
+  </div>
+
+  <div *ngIf="loading" class="loading-text">Chargement des contacts...</div>
+  <div *ngIf="!loading && !contacts.length" class="empty-text">Aucun candidat disponible pour la messagerie.</div>
+
+  <div class="messaging-container glass-card" *ngIf="!loading && contacts.length">
+    <div class="contacts-sidebar">
+      <div class="search-box">
+        <input type="text" placeholder="Rechercher..." class="search-input" [(ngModel)]="searchTerm" />
+      </div>
+      <div class="contacts-list">
+        <div class="contact-item" *ngFor="let contact of filteredContacts" (click)="selectContact(contact)"
+             [class.active]="selectedContact?.id === contact.id">
+          <div class="avatar">{{ contact.firstName.charAt(0) }}</div>
+          <div class="contact-info">
+            <h4>{{ getContactName(contact) }}</h4>
+            <p>{{ contact.title || 'Candidat' }}</p>
+          </div>
+          <span class="badge" *ngIf="contact.unread > 0">{{ contact.unread }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-area" *ngIf="selectedContact">
+      <div class="chat-header">
+        <h3>{{ getContactName(selectedContact) }}</h3>
+        <span class="status online">En ligne</span>
+      </div>
+      <div class="chat-history">
+        <div class="message" [class.received]="!isSent(msg)" [class.sent]="isSent(msg)" *ngFor="let msg of messages">
+          <p>{{ msg.content }}</p>
+          <span class="time">{{ msg.sentAt | date:'short' }}</span>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" placeholder="Écrire un message..." class="chat-input" [(ngModel)]="newMessage"
+               (keyup.enter)="sendMessage()" />
+        <button class="btn-primary send-btn" (click)="sendMessage()">Envoyer</button>
+      </div>
+    </div>
+  </div>
+</div>

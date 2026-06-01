@@ -1,0 +1,3 @@
+-- Rôles applicatifs (enum Java) : CANDIDAT, RECRUTEUR, RESPONSABLE_DEPT, RESPONSABLE_RH
+-- Les comptes par défaut sont créés au premier démarrage via AuthService.initDefaultUsers()
+-- Utilisez POST /api/auth/register pour créer de nouveaux utilisateurs.

@@ -1,0 +1,55 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Rapports & Statistiques</h2>
+    <div class="header-actions">
+      <button class="btn-primary" (click)="downloadReport('PDF')">Export PDF</button>
+      <button class="btn-secondary" (click)="downloadReport('CSV')">Export CSV</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-text">Chargement des statistiques...</div>
+  <div *ngIf="error" class="error-text">{{ error }}</div>
+  <p *ngIf="reportMessage" class="report-message">{{ reportMessage }}</p>
+
+  <div class="metrics-grid" *ngIf="!loading">
+    <div class="glass-card metric-card" *ngFor="let metric of metrics">
+      <h3>{{ metric.title }}</h3>
+      <div class="metric-value">{{ metric.value }}</div>
+      <div class="metric-trend" [ngClass]="metric.isPositive ? 'positive' : 'negative'">
+        <span class="trend-icon">{{ metric.isPositive ? '↑' : '↓' }}</span>
+        {{ metric.trend }}
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-grid" *ngIf="!loading">
+    <div class="glass-card chart-container">
+      <h3>Évolution des candidatures (par mois)</h3>
+      <div class="chart-wrapper">
+        <div class="y-axis">
+          <span class="y-label">Candidatures</span>
+          <div class="y-ticks">
+            <span class="y-tick" *ngFor="let tick of yTicks">{{ tick }}</span>
+          </div>
+        </div>
+        <div class="chart-body">
+          <div class="chart-bars">
+            <div class="bar-group" *ngFor="let value of chartData; let i = index">
+              <span class="bar-value">{{ value }}</span>
+              <div class="bar" [style.height]="getBarHeight(value)"></div>
+              <span class="bar-label">{{ monthLabels[i] }}</span>
+            </div>
+          </div>
+          <div class="x-label">Mois (6 derniers mois)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card chart-container">
+      <h3>Répartition des statuts</h3>
+      <div class="status-summary">
+        <p *ngFor="let metric of metrics">{{ metric.title }} : <strong>{{ metric.value }}</strong></p>
+      </div>
+    </div>
+  </div>
+</div>

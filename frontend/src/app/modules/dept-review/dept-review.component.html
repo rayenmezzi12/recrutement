@@ -1,0 +1,51 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Évaluation département</h2>
+    <p class="subtitle">Profils au stade test technique ou entretien final — avis transmis au recruteur</p>
+  </div>
+
+  <div class="glass-card filters-bar" *ngIf="!loading">
+    <label>Département</label>
+    <select [(ngModel)]="filterDepartment" (ngModelChange)="applyDepartmentFilter()">
+      <option value="">Tous les départements</option>
+      <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+    </select>
+  </div>
+
+  <div *ngIf="loading" class="loading-text">Chargement...</div>
+  <div *ngIf="error" class="error-text">{{ error }}</div>
+  <div *ngIf="success" class="success-text">{{ success }}</div>
+
+  <p class="empty-text" *ngIf="!loading && !items.length">Aucun candidat à évaluer pour ce département.</p>
+
+  <div class="review-grid" *ngIf="!loading && items.length">
+    <div class="glass-card review-card" *ngFor="let row of items">
+      <h3>{{ row.candidateName }}</h3>
+      <p><strong>Poste :</strong> {{ row.jobTitle }}</p>
+      <p><strong>Département :</strong> {{ row.department }}</p>
+      <p><strong>Étape :</strong> {{ stepLabels[row.app.currentStep!] }}</p>
+      <div class="evaluation-grid">
+        <div class="form-group">
+          <label>Compétences techniques (1-5)</label>
+          <input type="number" min="1" max="5" [(ngModel)]="row.techRating" />
+        </div>
+        <div class="form-group">
+          <label>Communication (1-5)</label>
+          <input type="number" min="1" max="5" [(ngModel)]="row.commRating" />
+        </div>
+        <div class="form-group">
+          <label>Culture fit (1-5)</label>
+          <input type="number" min="1" max="5" [(ngModel)]="row.fitRating" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Note globale / commentaire libre</label>
+        <textarea [(ngModel)]="row.comment" rows="3" placeholder="Points forts, réserves, recommandations particulières..."></textarea>
+      </div>
+      <div class="card-actions">
+        <button class="btn-primary" (click)="signal(row, 'avancer')">Signaler avancer</button>
+        <button class="btn-secondary" (click)="signal(row, 'rejeter')">Signaler rejeter</button>
+      </div>
+    </div>
+  </div>
+</div>

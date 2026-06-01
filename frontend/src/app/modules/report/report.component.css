@@ -1,0 +1,217 @@
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  padding: 1.5rem;
+}
+
+.metric-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: #a0aec0;
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.metric-trend {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.metric-trend.positive {
+  color: #48bb78;
+}
+
+.metric-trend.negative {
+  color: #f56565;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.chart-container {
+  padding: 1.5rem;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-container h3 {
+  margin: 0 0 1.5rem 0;
+  color: white;
+  font-size: 1.1rem;
+}
+
+/* ─── Chart Layout ─── */
+.chart-wrapper {
+  flex: 1;
+  display: flex;
+  gap: 0;
+}
+
+/* ─── Y Axis ─── */
+.y-axis {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-right: 0.5rem;
+  min-width: 70px;
+}
+
+.y-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #60efff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.y-ticks {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-right: 0.5rem;
+  padding-bottom: 28px; /* align with chart bottom */
+}
+
+.y-tick {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Chart Body ─── */
+.chart-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-bars {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  padding: 0.5rem 0 0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+  border-left: 2px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  min-height: 200px;
+}
+
+.bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+
+.bar-value {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #60efff;
+  margin-bottom: 4px;
+  min-height: 18px;
+  text-shadow: 0 0 8px rgba(96, 239, 255, 0.4);
+}
+
+.bar {
+  width: 60%;
+  max-width: 48px;
+  min-height: 4px;
+  background: linear-gradient(to top, #0061ff 0%, #60efff 100%);
+  border-radius: 6px 6px 0 0;
+  transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+  opacity: 0.85;
+  position: relative;
+  box-shadow: 0 0 12px rgba(0, 97, 255, 0.2);
+}
+
+.bar:hover {
+  opacity: 1;
+  box-shadow: 0 0 20px rgba(96, 239, 255, 0.4);
+  transform: scaleX(1.05);
+}
+
+.bar-label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ─── X Axis label ─── */
+.x-label {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #60efff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 0.75rem;
+  padding-top: 0.25rem;
+}
+
+/* ─── Status summary ─── */
+.status-summary {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.status-summary p {
+  padding: 0.75rem 1rem;
+  margin: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.9rem;
+  color: #94a3b8;
+  transition: background 0.2s;
+}
+
+.status-summary p:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.status-summary strong {
+  color: #60efff;
+  font-size: 1.1rem;
+}
+
+.report-message {
+  color: #48bb78;
+  padding: 0.5rem 0;
+}
+
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,128 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>{{ readonlyMode ? 'Suivi de ma candidature' : 'Pipeline de recrutement' }}</h2>
+    <div class="header-actions">
+      <button class="btn-primary" *ngIf="canManage" (click)="openApplyForm()" [disabled]="!jobs.length || !candidates.length">
+        + Nouvelle candidature
+      </button>
+      <button class="btn-primary" *ngIf="isCandidat" (click)="openApplyForm()" [disabled]="!jobs.length">
+        + Postuler à une offre
+      </button>
+    </div>
+  </div>
+
+  <p class="drag-hint" *ngIf="canManage && canDrag && !loading">
+    Glissez une carte d'une colonne à l'autre (poignée ⋮⋮) pour changer l'étape.
+  </p>
+  <p class="drag-hint readonly-hint" *ngIf="canManage && !canDrag && !readonlyMode && !loading">
+    Connexion en tant que recruteur requise pour déplacer les cartes (lecture seule).
+  </p>
+
+  <div class="glass-card filters-bar" *ngIf="canManage">
+    <select [(ngModel)]="filterJobId">
+      <option [ngValue]="null">Tous les postes</option>
+      <option *ngFor="let j of jobs" [ngValue]="j.id">{{ j.title }}</option>
+    </select>
+    <select [(ngModel)]="filterStep">
+      <option value="">Toutes les étapes</option>
+      <option *ngFor="let s of allSteps" [value]="s">{{ stepLabels[s] }}</option>
+    </select>
+    <select [(ngModel)]="filterStatus">
+      <option value="">Tous les statuts</option>
+      <option value="EN_ATTENTE">En attente</option>
+      <option value="SELECTIONNE">Sélectionné</option>
+      <option value="REJETE">Rejeté</option>
+      <option value="EMBAUCHE">Embauché</option>
+    </select>
+    <button type="button" class="btn-primary" (click)="applyFilters()">🔍 Filtrer</button>
+  </div>
+
+  <div *ngIf="loading" class="loading-text">Chargement...</div>
+  <div *ngIf="error" class="error-text">{{ error }}</div>
+  <div *ngIf="moving" class="loading-text">Mise à jour de l'étape...</div>
+
+  <div class="timeline-readonly" *ngIf="!loading && readonlyMode">
+    <p class="empty-text" *ngIf="!myApplications.length">Vous n'avez pas encore de candidature. Postulez à une offre.</p>
+    <div class="glass-card timeline-app" *ngFor="let app of myApplications">
+      <h3>{{ app.jobTitle }}</h3>
+      <p>Statut : <strong>{{ getStatusLabel(app.status) }}</strong></p>
+      <ul class="timeline-steps">
+        <li *ngFor="let s of allSteps" [class.done]="isStepReached(s, app.currentStep)" [class.current]="app.currentStep === s">
+          <span class="dot"></span>
+          {{ stepLabels[s] }}
+        </li>
+      </ul>
+      <p class="readonly-hint">Progression en lecture seule — vous ne pouvez pas modifier les étapes.</p>
+    </div>
+  </div>
+
+  <div class="pipeline-container" cdkDropListGroup *ngIf="!loading && !readonlyMode">
+    <div class="glass-card pipeline-stage" *ngFor="let stage of stages" [style.border-top-color]="stage.color">
+      <div class="stage-header">
+        <h3>{{ stage.title }}</h3>
+        <span class="stage-count" [style.background]="stage.color">{{ stage.applications.length }}</span>
+      </div>
+
+      <div
+        class="stage-body"
+        cdkDropList
+        [cdkDropListData]="stage.applications"
+        [cdkDropListDisabled]="!canDrag"
+        (cdkDropListDropped)="onKanbanDrop($event, stage.step)"
+      >
+        <p class="placeholder-text" *ngIf="!stage.applications.length">
+          {{ canDrag ? 'Déposez une candidature ici' : 'Aucune candidature' }}
+        </p>
+
+        <div
+          class="application-card"
+          *ngFor="let app of stage.applications"
+          cdkDrag
+          [cdkDragDisabled]="!canDrag"
+          [cdkDragData]="app"
+        >
+          <div class="card-top">
+            <span class="drag-handle" cdkDragHandle *ngIf="canDrag" title="Glisser">⋮⋮</span>
+            <div class="card-titles">
+              <h4>{{ app.candidateName }}</h4>
+              <p>{{ app.jobTitle }}</p>
+            </div>
+          </div>
+          <span class="status-badge pending">{{ getStatusLabel(app.status) }}</span>
+          <div class="card-actions" *ngIf="canDrag">
+            <button type="button" class="btn-secondary btn-sm" (click)="updateStatus(app, 'SELECTIONNE', $event)">Sélectionner</button>
+            <button type="button" class="btn-secondary btn-sm" (click)="updateStatus(app, 'REJETE', $event)">Rejeter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showApplyForm" (click)="closeApplyForm()">
+  <div class="glass-card modal-content" (click)="$event.stopPropagation()">
+    <h3>{{ isCandidat ? 'Postuler' : 'Nouvelle candidature' }}</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Poste</label>
+        <select [(ngModel)]="applyForm.jobId">
+          <option *ngFor="let job of jobs" [ngValue]="job.id">{{ job.title }}</option>
+        </select>
+      </div>
+      <div class="form-group" *ngIf="canManage">
+        <label>Candidat</label>
+        <select [(ngModel)]="applyForm.candidateId">
+          <option *ngFor="let c of candidates" [ngValue]="c.id">{{ c.firstName }} {{ c.lastName }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea [(ngModel)]="applyForm.notes"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeApplyForm()">Annuler</button>
+      <button class="btn-primary" (click)="submitApplication()">Envoyer</button>
+    </div>
+  </div>
+</div>

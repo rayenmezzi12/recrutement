@@ -1,0 +1,97 @@
+.candidates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.candidate-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0061ff 0%, #60efff 100%);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.info h3 {
+  margin: 0 0 0.2rem 0;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #a0aec0;
+}
+
+.card-header .status-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.skill-tag {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.score-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.score-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease-in-out;
+}
+
+.score-text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #a0aec0;
+  text-align: right;
+}
+
+.card-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+.card-footer button {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}

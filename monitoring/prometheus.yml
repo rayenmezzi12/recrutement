@@ -1,0 +1,11 @@
+﻿global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: 'spring-boot-services'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets:
+          - auth-service:8081
+          - logique-metier-service:8083
+          - notification-service:8085
+          - chatbot-service:8088

@@ -1,0 +1,70 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Panneau d'Administration</h2>
+    <div class="header-actions">
+      <button class="btn-primary" (click)="openCreateForm()">+ Ajouter Utilisateur</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-text">Chargement...</div>
+  <div *ngIf="error" class="error-text">{{ error }}</div>
+  <div *ngIf="success" class="success-text">{{ success }}</div>
+
+  <div class="glass-card table-container" *ngIf="!loading">
+    <table class="premium-table" *ngIf="registeredUsers.length; else emptyUsers">
+      <thead>
+        <tr>
+          <th>Nom complet</th>
+          <th>Identifiant</th>
+          <th>Email</th>
+          <th>Rôle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of registeredUsers">
+          <td class="fw-bold">{{ user.fullName }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ getRoleLabel(user.roles) }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #emptyUsers>
+      <p class="empty-text">Aucun utilisateur chargé.</p>
+    </ng-template>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
+  <div class="glass-card modal-content" (click)="$event.stopPropagation()">
+    <h3>Nouvel utilisateur</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nom complet</label>
+        <input [(ngModel)]="form.fullName" />
+      </div>
+      <div class="form-group">
+        <label>Identifiant</label>
+        <input [(ngModel)]="form.username" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="form.email" />
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" [(ngModel)]="form.password" />
+      </div>
+      <div class="form-group">
+        <label>Rôle</label>
+        <select [(ngModel)]="form.role">
+          <option *ngFor="let role of roleOptions" [value]="role">{{ role }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeForm()">Annuler</button>
+      <button class="btn-primary" (click)="createUser()">Créer</button>
+    </div>
+  </div>
+</div>

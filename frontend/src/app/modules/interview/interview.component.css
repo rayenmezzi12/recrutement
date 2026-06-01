@@ -1,0 +1,81 @@
+.interviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.interview-card {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.5rem 2rem;
+}
+
+.date-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: 12px;
+  min-width: 80px;
+  border: 1px solid rgba(96, 239, 255, 0.2);
+}
+
+.date-block .day {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #60efff;
+  line-height: 1;
+}
+
+.date-block .month {
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.date-block .time {
+  font-size: 0.85rem;
+  color: #a0aec0;
+}
+
+.interview-details {
+  flex: 1;
+}
+
+.interview-details h3 {
+  margin: 0 0 0.3rem 0;
+  font-size: 1.3rem;
+  color: white;
+}
+
+.role {
+  margin: 0 0 0.8rem 0;
+  color: #a0aec0;
+}
+
+.type-badge {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #e2e8f0;
+}
+
+.interview-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.meeting-btn {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+}
+
+.meeting-btn:hover {
+  box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+}

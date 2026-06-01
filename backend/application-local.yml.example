@@ -1,0 +1,20 @@
+# Configuration locale — PostgreSQL 18 sur le port 5433
+# (Le port 5432 est utilisé par PostgreSQL Odoo sur cette machine)
+#
+# Copiez vers :
+#   authentification/src/main/resources/application-local.yml
+#   logique-metier/src/main/resources/application-local.yml
+
+# --- authentification ---
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/auth_db
+    username: postgres
+    password: VOTRE_MOT_DE_PASSE
+
+# --- logique-metier (même mot de passe, URL différente) ---
+# spring:
+#   datasource:
+#     url: jdbc:postgresql://localhost:5433/logique_metier_db
+#     username: postgres
+#     password: VOTRE_MOT_DE_PASSE

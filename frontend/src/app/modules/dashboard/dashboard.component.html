@@ -1,0 +1,64 @@
+<div class="dashboard-wrapper">
+  <header class="dashboard-header">
+    <div>
+      <h1>{{ dashboardTitle }}</h1>
+      <p class="welcome-text" *ngIf="username">
+        Bienvenue, {{ username }}
+        <span class="role-inline">— {{ roleLabel }}</span>
+      </p>
+    </div>
+  </header>
+
+  <div class="access-denied glass-card" *ngIf="accessDenied">
+    Vous n'avez pas accès à cette section. Utilisez le menu pour naviguer.
+  </div>
+
+  <div class="kpi-grid" *ngIf="showKpis && kpis">
+    <div class="glass-card kpi-card">
+      <h4>Candidatures actives</h4>
+      <div class="kpi-value">{{ kpis.totalApplications }}</div>
+    </div>
+    <div class="glass-card kpi-card">
+      <h4>Candidats</h4>
+      <div class="kpi-value">{{ kpis.totalCandidates }}</div>
+    </div>
+    <div class="glass-card kpi-card">
+      <h4>Offres ouvertes</h4>
+      <div class="kpi-value">{{ kpis.openJobs }}</div>
+    </div>
+    <div class="glass-card kpi-card">
+      <h4>Délai moyen (jours)</h4>
+      <div class="kpi-value">{{ kpis.averageDaysInPipeline | number:'1.0-1' }}</div>
+    </div>
+  </div>
+
+  <div class="glass-card alerts-card" *ngIf="showKpis && kpis?.staleApplications?.length">
+    <h3>Alertes — candidatures en attente</h3>
+    <p *ngFor="let s of kpis!.staleApplications">
+      Candidature #{{ s.applicationId }} — {{ s.daysWaiting }} jours à l'étape {{ s.currentStep }}
+    </p>
+  </div>
+
+  <div class="glass-card alerts-card" *ngIf="showDeptReviews">
+    <h3>Avis responsables département</h3>
+    <p *ngIf="errorDeptReviews" class="error-text">{{ errorDeptReviews }}</p>
+    <p *ngIf="!errorDeptReviews && !deptReviews.length" class="empty-text">Aucun avis récent.</p>
+    <div *ngFor="let review of deptReviews" class="dept-review-item">
+      <strong>Candidature #{{ review.applicationId }}</strong>
+      <span class="time"> — {{ review.createdAt | date:'short' }} ({{ review.actorUsername }})</span>
+      <p>{{ review.details }}</p>
+    </div>
+  </div>
+
+  <div class="modules-grid">
+    <a
+      *ngFor="let mod of modules"
+      [routerLink]="mod.route"
+      class="module-card glass-card"
+    >
+      <div class="icon">{{ mod.icon }}</div>
+      <h3>{{ mod.title }}</h3>
+      <p>{{ mod.description }}</p>
+    </a>
+  </div>
+</div>

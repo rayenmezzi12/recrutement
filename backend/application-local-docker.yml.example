@@ -1,0 +1,7 @@
+# Utilisez ce fichier si vous démarrez PostgreSQL via Docker Compose (port 5433).
+# Renommez en application-local.yml dans authentification et logique-metier.
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/auth_db
+    username: postgres
+    password: postgres

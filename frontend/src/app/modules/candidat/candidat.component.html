@@ -1,0 +1,151 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Vivier de Candidats</h2>
+    <div class="header-actions" *ngIf="canManage">
+      <button class="btn-primary" (click)="openCreateForm()">+ Ajouter Candidat</button>
+    </div>
+  </div>
+
+  <div class="glass-card filters-bar" *ngIf="canManage">
+    <input placeholder="Recherche nom/email..." [(ngModel)]="searchQ" (keyup.enter)="applySearch()" [disabled]="loading" />
+    <input placeholder="Compétences..." [(ngModel)]="searchSkills" (keyup.enter)="applySearch()" [disabled]="loading" />
+    <input placeholder="Poste..." [(ngModel)]="searchTitle" (keyup.enter)="applySearch()" [disabled]="loading" />
+    <button type="button" class="btn-primary" (click)="applySearch()">
+      🔍 Filtrer
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-text">Chargement des candidats...</div>
+  <div *ngIf="error" class="error-text">{{ error }}</div>
+  <div *ngIf="!loading && !candidats.length" class="empty-text">Aucun candidat enregistré.</div>
+
+  <div class="candidates-grid" *ngIf="!loading && candidats.length">
+    <div class="glass-card candidate-card" *ngFor="let candidat of candidats">
+      <div class="card-header">
+        <div class="avatar">{{ candidat.firstName.charAt(0) }}</div>
+        <div class="info">
+          <h3>{{ getFullName(candidat) }}</h3>
+          <p>{{ candidat.title || 'Poste non renseigné' }}</p>
+        </div>
+        <span class="status-badge" [ngClass]="getStatusClass(candidat.applicationStatus)">
+          {{ getStatusLabel(candidat.applicationStatus) }}
+        </span>
+      </div>
+
+      <div class="card-body">
+        <div class="skills">
+          <span class="skill-tag" *ngFor="let skill of getSkillsList(candidat.skills)">{{ skill }}</span>
+          <span class="skill-tag" *ngIf="!getSkillsList(candidat.skills).length">Aucune compétence</span>
+        </div>
+        <div class="score-bar">
+          <div class="score-fill" [style.width.%]="getScore(candidat)"
+               [ngStyle]="{'background': getScore(candidat) > 70 ? '#48bb78' : (getScore(candidat) > 50 ? '#ed8936' : '#f56565')}">
+          </div>
+        </div>
+        <p class="score-text">Score profil : {{ getScore(candidat) }}%</p>
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-secondary" (click)="viewProfile(candidat)">Profil complet</button>
+        <button class="btn-primary" *ngIf="canManage" (click)="contactCandidate(candidat)">Contacter</button>
+        <button class="btn-icon" *ngIf="canManage" (click)="openEditForm(candidat)">✏️</button>
+        <button class="btn-icon delete" *ngIf="canManage" (click)="deleteCandidate(candidat.id)">🗑️</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
+  <div class="glass-card modal-content" (click)="$event.stopPropagation()">
+    <h3>{{ editingId ? 'Modifier le candidat' : 'Nouveau candidat' }}</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Prénom</label>
+        <input [(ngModel)]="form.firstName" />
+      </div>
+      <div class="form-group">
+        <label>Nom</label>
+        <input [(ngModel)]="form.lastName" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="form.email" />
+      </div>
+      <div class="form-group">
+        <label>Téléphone</label>
+        <input [(ngModel)]="form.phone" />
+      </div>
+      <div class="form-group">
+        <label>Poste visé</label>
+        <input [(ngModel)]="form.title" />
+      </div>
+      <div class="form-group">
+        <label>Compétences (séparées par virgule)</label>
+        <input [(ngModel)]="form.skills" />
+      </div>
+      <div class="form-group">
+        <label>Années d'expérience</label>
+        <input type="number" [(ngModel)]="form.experienceYears" />
+      </div>
+      <div class="form-group">
+        <label>Lettre de motivation</label>
+        <textarea [(ngModel)]="form.coverLetter"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Adresse</label>
+        <input [(ngModel)]="form.address" />
+      </div>
+      <div class="form-group">
+        <label>Date de naissance</label>
+        <input type="date" [(ngModel)]="form.dateOfBirth" />
+      </div>
+      <div class="form-group">
+        <label>LinkedIn</label>
+        <input [(ngModel)]="form.linkedin" placeholder="https://linkedin.com/in/..." />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeForm()">Annuler</button>
+      <button class="btn-primary" (click)="saveCandidate()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="selectedCandidate" (click)="closeProfile()">
+  <div class="glass-card modal-content" (click)="$event.stopPropagation()">
+    <h3>{{ getFullName(selectedCandidate) }}</h3>
+    <p><strong>Email :</strong> {{ selectedCandidate.email }}</p>
+    <p><strong>Téléphone :</strong> {{ selectedCandidate.phone || '—' }}</p>
+    <p><strong>Poste :</strong> {{ selectedCandidate.title || '—' }}</p>
+    <p><strong>Expérience :</strong> {{ selectedCandidate.experienceYears ?? 0 }} ans</p>
+    <p><strong>Compétences :</strong> {{ selectedCandidate.skills || '—' }}</p>
+    <p><strong>Lettre :</strong> {{ selectedCandidate.coverLetter || '—' }}</p>
+    <p><strong>Adresse :</strong> {{ selectedCandidate.address || '—' }}</p>
+    <p><strong>Naissance :</strong> {{ selectedCandidate.dateOfBirth || '—' }}</p>
+    <p><strong>LinkedIn :</strong>
+      <a *ngIf="selectedCandidate.linkedin" [href]="selectedCandidate.linkedin" target="_blank">Profil</a>
+      <span *ngIf="!selectedCandidate.linkedin">—</span>
+    </p>
+    <div *ngIf="selectedCandidate.resumeUrl" class="cv-download-section">
+      <strong>CV :</strong>
+      <button class="btn-primary btn-sm" (click)="downloadCv(selectedCandidate)">📄 Télécharger le CV</button>
+    </div>
+    <div class="form-group" *ngIf="canManage">
+      <label>Uploader CV</label>
+      <input type="file" accept=".pdf,.doc,.docx" (change)="onCvSelected($event)" />
+      <button class="btn-primary" *ngIf="cvFile" (click)="uploadCvForSelected()">Envoyer CV</button>
+    </div>
+    <h4>Historique des actions</h4>
+    <div *ngIf="historyLoading" class="loading-text">Chargement historique...</div>
+    <ul class="history-list" *ngIf="!historyLoading && history.length">
+      <li *ngFor="let h of history">
+        <strong>{{ h.actionType }}</strong> — {{ h.details }}
+        <span class="time">({{ h.createdAt | date:'short' }} — {{ h.actorUsername }})</span>
+      </li>
+    </ul>
+    <p *ngIf="!historyLoading && !history.length" class="empty-text">Aucune action enregistrée.</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeProfile()">Fermer</button>
+    </div>
+  </div>
+</div>

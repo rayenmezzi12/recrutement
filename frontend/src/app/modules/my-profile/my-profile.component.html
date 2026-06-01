@@ -1,0 +1,134 @@
+<div class="page-container">
+
+  <div class="page-header">
+
+    <h2>Mon profil</h2>
+
+    <button class="btn-primary" *ngIf="profile && !editMode" (click)="editMode = true">Modifier</button>
+
+  </div>
+
+
+
+  <div *ngIf="loading" class="loading-text">Chargement du profil...</div>
+
+  <div *ngIf="error" class="error-text">{{ error }}</div>
+
+  <div *ngIf="success" class="success-text">{{ success }}</div>
+
+
+
+  <div class="glass-card profile-card" *ngIf="!loading && profile && !editMode">
+
+    <h3>{{ profile.firstName }} {{ profile.lastName }}</h3>
+
+    <p><strong>Email :</strong> {{ profile.email }}</p>
+
+    <p><strong>Téléphone :</strong> {{ profile.phone || '—' }}</p>
+
+    <p><strong>Poste visé :</strong> {{ profile.title || '—' }}</p>
+
+    <p><strong>Expérience :</strong> {{ profile.experienceYears ?? 0 }} ans</p>
+
+    <div class="skills">
+
+      <span class="skill-tag" *ngFor="let skill of getSkillsList(profile.skills)">{{ skill }}</span>
+
+      <span class="skill-tag" *ngIf="!getSkillsList(profile.skills).length">Aucune compétence renseignée</span>
+
+    </div>
+
+    <p class="cover-letter"><strong>Lettre :</strong> {{ profile.coverLetter || '—' }}</p>
+
+    <div *ngIf="profile.resumeUrl" class="cv-download-section">
+      <strong>CV :</strong> <button class="btn-primary btn-sm" (click)="downloadCv()">📄 Télécharger le CV</button>
+    </div>
+
+    <div class="form-group">
+
+      <label>Déposer / remplacer mon CV</label>
+
+      <input type="file" accept=".pdf,.doc,.docx" (change)="onCvSelected($event)" />
+
+      <button class="btn-primary" *ngIf="cvFile" (click)="uploadCv()">Envoyer CV</button>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="glass-card profile-card" *ngIf="!loading && profile && editMode">
+
+    <div class="form-grid">
+
+      <div class="form-group">
+
+        <label>Prénom</label>
+
+        <input [(ngModel)]="profile.firstName" />
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Nom</label>
+
+        <input [(ngModel)]="profile.lastName" />
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Téléphone</label>
+
+        <input [(ngModel)]="profile.phone" />
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Poste visé</label>
+
+        <input [(ngModel)]="profile.title" />
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Compétences (virgules)</label>
+
+        <input [(ngModel)]="profile.skills" />
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Années d'expérience</label>
+
+        <input type="number" [(ngModel)]="profile.experienceYears" />
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Lettre de motivation</label>
+
+        <textarea [(ngModel)]="profile.coverLetter"></textarea>
+
+      </div>
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button type="button" class="btn-secondary" (click)="editMode = false">Annuler</button>
+
+      <button type="button" class="btn-primary" [class.disabled-btn]="saving" (click)="saving ? null : saveProfile()">{{ saving ? 'Enregistrement...' : 'Enregistrer' }}</button>
+
+    </div>
+
+  </div>
+
+</div>
+

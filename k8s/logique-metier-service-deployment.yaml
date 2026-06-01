@@ -1,0 +1,36 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logique-metier-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logique-metier-service
+  template:
+    metadata:
+      labels:
+        app: logique-metier-service
+    spec:
+      containers:
+      - name: logique-metier-service
+        image: pfa-recrutement/
+        ports:
+        - containerPort: 8083
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: app-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logique-metier-service
+spec:
+  selector:
+    app: logique-metier-service
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8083

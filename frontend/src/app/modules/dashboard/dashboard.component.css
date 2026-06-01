@@ -1,0 +1,91 @@
+.dashboard-wrapper {
+  padding: 0.5rem 1rem 2rem;
+  max-width: 1200px;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.8rem;
+  background: linear-gradient(135deg, #0061ff 0%, #60efff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome-text {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.role-inline {
+  color: #60efff;
+}
+
+.dept-review-item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dept-review-item:last-child {
+  border-bottom: none;
+}
+
+.dept-review-item .time {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+}
+
+.dept-review-item p {
+  margin: 0.35rem 0 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.access-denied {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  color: #fbd38d;
+  border-color: rgba(251, 211, 141, 0.3);
+}
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.module-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.module-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.module-card .icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.module-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.module-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #ccc;
+}

@@ -1,0 +1,59 @@
+<div class="page-container chatbot-page">
+  <div class="page-header">
+    <h2>Assistant IA</h2>
+    <p class="page-subtitle">Votre conseiller en évolution professionnelle</p>
+  </div>
+
+  <div class="chatbot-container glass-card">
+    <div class="chat-messages" #scrollMe>
+      <div *ngFor="let msg of messages" class="message-wrapper" [ngClass]="msg.sender">
+        <div class="message-bubble">
+          <p>{{ msg.text }}</p>
+          <span class="timestamp">{{ msg.timestamp | date:'shortTime' }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="isLoading" class="message-wrapper bot">
+        <div class="message-bubble typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <p class="error-hint" *ngIf="errorHint">{{ errorHint }}</p>
+
+    <div class="suggested-questions" *ngIf="showSuggestions && !isLoading">
+      <p class="suggestions-label">💡 Questions suggérées</p>
+      <div class="suggestions-grid">
+        <button
+          *ngFor="let q of suggestedQuestions"
+          class="suggested-btn"
+          (click)="sendSuggestedQuestion(q.text)"
+        >
+          <span class="sq-icon">{{ q.icon }}</span>
+          <span class="sq-text">{{ q.text }}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <input
+        type="text"
+        [(ngModel)]="userInput"
+        (keyup.enter)="sendMessage()"
+        placeholder="Posez votre question..."
+        class="chat-input"
+        [disabled]="isLoading"
+      />
+      <button
+        type="button"
+        (click)="sendMessage()"
+        [disabled]="isLoading || !userInput.trim()"
+        class="send-btn"
+      >
+        <span *ngIf="!isLoading">Envoyer</span>
+        <span *ngIf="isLoading" class="spinner">⟳</span>
+      </button>
+    </div>
+  </div>
+</div>

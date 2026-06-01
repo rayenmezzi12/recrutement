@@ -1,0 +1,112 @@
+<div class="page-container">
+
+  <div class="page-header">
+
+    <h2>Offres d'embauche</h2>
+
+    <button class="btn-primary" *ngIf="roleService.isStaff()" (click)="openForm()">+ Générer une offre</button>
+
+  </div>
+
+
+
+  <div *ngIf="loading" class="loading-text">Chargement...</div>
+
+
+
+  <div class="glass-card table-container" *ngIf="!loading">
+
+    <table class="premium-table">
+
+      <thead>
+
+        <tr>
+
+          <th>Poste</th>
+
+          <th>Salaire</th>
+
+          <th>Statut</th>
+
+          <th>Actions</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let o of (roleService.isCandidat() ? myOffers : offers)">
+
+          <td>{{ o.positionTitle }}</td>
+
+          <td>{{ o.salaryOffer }} €</td>
+
+          <td>{{ statusLabel(o.status) }}</td>
+
+          <td>
+
+            <button class="btn-secondary btn-sm" *ngIf="roleService.isStaff() && canSend(o.status)" (click)="send(o.id!)">Envoyer</button>
+
+            <button class="btn-primary btn-sm" *ngIf="!roleService.isStaff() && canRespond(o.status)" (click)="respond(o.id!, true)">Accepter</button>
+
+            <button class="btn-secondary btn-sm" *ngIf="!roleService.isStaff() && canRespond(o.status)" (click)="respond(o.id!, false)">Refuser</button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+
+<div class="modal-overlay" *ngIf="showForm" (click)="showForm = false">
+
+  <div class="glass-card modal-content" (click)="$event.stopPropagation()">
+
+    <h3>Générer une offre</h3>
+
+    <div class="form-group">
+
+      <label>Candidature</label>
+
+      <select [(ngModel)]="form.applicationId">
+
+        <option *ngFor="let a of applications" [ngValue]="a.id">{{ getApplicationLabel(a) }}</option>
+
+      </select>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Salaire annuel brut</label>
+
+      <input type="number" [(ngModel)]="form.salary" />
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Date de début</label>
+
+      <input type="date" [(ngModel)]="form.startDate" />
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button class="btn-primary" (click)="generate()">Générer</button>
+
+    </div>
+
+  </div>
+
+</div>
+

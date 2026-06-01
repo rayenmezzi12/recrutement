@@ -1,0 +1,16 @@
+.profile-card h3 {
+  margin-top: 0;
+}
+
+.profile-card .skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.cover-letter {
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
+}

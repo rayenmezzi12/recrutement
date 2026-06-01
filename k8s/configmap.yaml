@@ -1,0 +1,9 @@
+﻿apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  EUREKA_URI: "http://eureka-server:8761/eureka"
+  DB_URL: "jdbc:postgresql://postgres:5432/logique_metier_db"
+  AUTH_DB_URL: "jdbc:postgresql://postgres:5432/auth_db"
+  RABBITMQ_HOST: "rabbitmq"

@@ -1,0 +1,16 @@
+# Maven
+backend/*/target/
+backend/.mvn/
+!backend/**/src/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Docker
+.env
+
+# IDE
+.idea/
+*.iml
+.vscode/

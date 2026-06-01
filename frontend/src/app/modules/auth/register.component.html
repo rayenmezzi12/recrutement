@@ -1,0 +1,32 @@
+<div class="login-container">
+  <div class="login-form-wrapper">
+    <h2 class="title">Créer un compte</h2>
+    <p class="subtitle">Inscription — le rôle détermine votre espace après connexion</p>
+    <form (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label>Identifiant</label>
+        <input [(ngModel)]="form.username" name="username" required [disabled]="loading" />
+      </div>
+      <div class="form-group">
+        <label>Nom complet</label>
+        <input [(ngModel)]="form.fullName" name="fullName" required [disabled]="loading" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="form.email" name="email" required [disabled]="loading" />
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" [(ngModel)]="form.password" name="password" required [disabled]="loading" />
+      </div>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="success-text" style="color:#48bb78;margin-bottom:1rem">{{ successMessage }}</div>
+      <button type="submit" class="btn-submit" [class.disabled-btn]="loading">
+        {{ loading ? 'Création...' : 'S\'inscrire' }}
+      </button>
+    </form>
+    <p class="subtitle" style="margin-top:1rem">
+      Déjà un compte ? <a routerLink="/login" style="color:#60efff">Se connecter</a>
+    </p>
+  </div>
+</div>
