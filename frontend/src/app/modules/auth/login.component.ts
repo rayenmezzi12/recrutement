@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
-import { ROLES } from '../../core/constants/roles';
 
 @Component({
   selector: 'app-login',
@@ -32,15 +31,11 @@ export class LoginComponent {
       .login({ username: this.username.trim(), password: this.password })
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: () => this.router.navigateByUrl(this.dashboardForRole()),
+        next: () => this.router.navigateByUrl('/dashboard'),
         error: (err) => {
           this.errorMessage =
             err.error?.error ?? 'Identifiants invalides. Vérifiez votre identifiant et mot de passe.';
         }
       });
-  }
-
-  private dashboardForRole(): string {
-    return '/dashboard';
   }
 }
