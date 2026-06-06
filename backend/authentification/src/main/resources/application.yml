@@ -38,6 +38,6 @@ eureka:
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
 
 jwt:
-  secret: 9a4f2c8d3b7a1e5f8g6h4j2k0l9m8n7o6p5q4r3s2t1u0v9w8x7y6z5a4b3c2d1e
+  secret: ${JWT_SECRET}
   expiration: 86400000 # 24 hours
   refreshExpiration: 604800000 # 7 days

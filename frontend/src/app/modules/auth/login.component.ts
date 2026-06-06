@@ -41,10 +41,6 @@ export class LoginComponent {
   }
 
   private dashboardForRole(): string {
-    const roles = this.authService.getRoles();
-    if (roles.includes(ROLES.RESPONSABLE_RH)) return '/dashboard';
-    if (roles.includes(ROLES.RESPONSABLE_DEPT)) return '/dashboard';
-    if (roles.includes(ROLES.RECRUTEUR)) return '/dashboard';
     return '/dashboard';
   }
 }
